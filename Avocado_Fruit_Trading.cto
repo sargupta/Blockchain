@@ -1,0 +1,98 @@
+ * A business network for shipping Avocados
+ */
+
+namespace org.Avocados.net
+
+enum AvocadoType {
+  o HAAS  
+  o DUKE
+  o GANTER
+}
+
+enum PackageStatus {
+  o INITIAL_STATE
+  o FACTORY_PACKAGING
+  o PACKAGE_READY
+  o PACKAGE_RECIEVED
+}
+
+/**
+ * An abstract transaction that is related to a Package
+ */
+abstract transaction PackageTransaction {
+  --> Package package
+}
+
+transaction SendPackageToFactory extends PackageTransaction {
+}
+
+transaction SendPackageToMarket extends PackageTransaction {
+}
+
+transaction SendMoneyToFarm extends PackageTransaction {
+}
+
+/**
+ * A package being tracked as an asset on the ledger
+ */
+asset Package identified by packageId {
+  o String packageId
+  o PackageStatus status
+  o AvocadoType type
+  o Long boxCount
+  --> Contract contract
+}
+
+/**
+ * Defines a contract between a Farm and a Market to ship using
+ * a Factory, paying a set box price.
+ */
+asset Contract identified by contractId {
+  o String contractId
+  --> Farm farm
+  --> AvocadosFactory AvocadosFactory
+  --> Market Market
+  o DateTime arrivalDateTime
+  o Double boxPrice
+}
+
+/**
+ * A concept for a simple street address
+ */
+concept Address {
+  o String city
+  o String street optional
+  o String zip optional
+}
+
+/**
+ * An abstract participant type in this business network
+ */
+abstract participant Business identified by id {
+  o String id
+  o Address address
+  o Double accountBalance
+}
+
+
+
+/**
+ * A Farm is a type of participant in the network
+ */
+participant Farm extends Business {
+}
+
+/**
+ * A Factory is a type of participant in the network
+ */
+participant AvocadosFactory extends Business {
+}
+
+participant Market extends Business {
+}
+
+/**
+ * JUST FOR INITIALIZING A DEMO
+ */
+transaction SetupDemo {
+}
